@@ -21,9 +21,14 @@
 
 - recursion
   * adding merge sort for gpa sorting
+
+pick a branch here and send your email or git user alongside which branch you wanna do on the gc so i can add yall as contributors, for the student records branch we can have more than 1 person cus marami sya or if masosolo nyo eh di isolo nyo. the rest 1 by 1 assignment or more than 1 if may gusto tumulong sa branch ng iba (extra creds :O)
  
 PS: For each group of people working on the respective branches, create a flow chart first, once the flow charts are created, we can easily dictate how each branch would be merged + requirements ren kasi ni sir so yeah xd
 once tapos na sa branch and u know its functioning and edge cases are solved, merge it with the other functionalities in the test branch, ok lng magka bugs sa test branch just make sure to fix yuhh
+
+
+
  
 ================RELATED BRANCHES================
 - search records and search algorithms defo work towards each other at some point so keep that in mind
@@ -38,8 +43,14 @@ once tapos na sa branch and u know its functioning and edge cases are solved, me
 - if a structural change is necessary, notify the student-records peeps before modifying it
 
 
+
+
 ================REQUIREMENTS================
 - FInal working program -> use .NET for GUI 
 - For now, we can stay with CLIs for testing
 
+
+
+
+ 
 
