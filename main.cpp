@@ -1,18 +1,67 @@
 #include <iostream>
-#include <regex>
-#include <vector>
-// Using specific imports to avoid conflicts
+#include <string>
+
+// imports 
 using std::cout;
 using std::endl;
 using std::cin;
 using std::string;
-using std::vector;
-using std::size;
+//Prototype
+void AddStudents();
+
+struct Node
+{
+    int studentID;
+    string firstName,middleInitials,surname;
+    Node* next;
+
+    Node(string FN, string MI, string SN, int ID)
+        : firstName(FN), middleInitials(MI), surname(SN),
+        studentID(ID), next(nullptr) {}
+};
+
+class LinkedList{
+ private:   
+ Node* head;
+ public:
+ LinkedList(){
+    head = nullptr;
+ };
+ 
+ void AppendStudent(string FN, string MI, string SN,int ID){
+    Node* newNode = new Node(FN,MI,SN,ID);
+    
+    if(head == nullptr){
+    head = newNode;
+    return;
+ }
+
+ Node* temp = head;
+    while (head != nullptr) {
+        Node* tmp = head;
+        head = head->next;
+        delete tmp;
+    }
+
+ temp->next = newNode;
+ }
+ void Display() const {
+    if (head == nullptr) { cout << "No students yet.\n"; return; }
+    int i = 1;
+    for (Node* cur = head; cur != nullptr; cur = cur->next) {
+        cout << i++ << "). " << cur->firstName << " "
+             << cur->middleInitials << " " << cur->surname << "\n";
+    }
+}
+};
+
+//Global 
+LinkedList StudentInfo;
 
 int main() {
 
     int choice;
-    vector<string> firstName, middleInitial, surname;
+
 
     do {
 
@@ -33,42 +82,17 @@ int main() {
         cout << "Enter your choice: ";
 
         cin >> choice;
-        // ingores the leftover \n so that the getline below can continue
+
         cin.ignore();
 
         switch (choice) {
             case 1: {
-                string ans;
-                do {
-                    cout << "< Add Student below >\n";
-                    string FN, MI, SN;
+                AddStudents();
 
-                    cout << "First Name: ";
-                    getline(cin, FN);
-
-                    cout << "Middle Initials: ";
-                    getline(cin, MI);
-
-                    cout << "Surname: ";
-                    getline(cin, SN);
-
-                    firstName.push_back(FN);
-                    middleInitial.push_back(MI);
-                    surname.push_back(SN);
-
-                    cout << "Do you want to add another student to the list (y/n): ";
-                    getline(cin, ans);
-
-                    } while (ans == "y" || ans == "Y");
                 }
                 break;
             case  2:
-                cout << "Currently all students list:\n";
-
-                for (size_t i = 0; i < surname.size(); i++) {
-                    cout << (i + 1) << "). " << firstName.at(i) << " " << middleInitial.at(i) << " " << surname.at(i) << "\n";
-                };
-
+                StudentInfo.Display();
                 break;
             case  3:
                 cout << "Search Student:\n";
@@ -102,4 +126,26 @@ int main() {
     
 
     return 0;
+}
+
+void AddStudents(){
+ string ans,FN, MI, SN;
+ static int ID = 1; 
+    do {
+        cout << "< Add Student below >\n";
+
+        cout << "First Name: ";
+        getline(cin, FN);
+
+        cout << "Middle Initials: ";
+        getline(cin, MI);
+
+        cout << "Surname: ";
+        getline(cin, SN);
+
+        StudentInfo.AppendStudent(FN,MI,SN,ID++);
+        cout << "Do you want to add another student to the list (y/n): ";
+         getline(cin, ans);          
+} 
+while (ans == "y" || ans == "Y");
 }
