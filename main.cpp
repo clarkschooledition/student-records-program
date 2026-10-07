@@ -9,6 +9,10 @@ int main() {
 
     int choice;
 
+    string firstName[],middleName[],lastName[];
+    
+
+
     cout << "========================================\n";
     cout << " STUDENT RECORD MANAGEMENT SYSTEM\n";
     cout << "========================================\n";
