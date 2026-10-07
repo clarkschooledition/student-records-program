@@ -8,18 +8,14 @@ using std::cin;
 using std::string;
 using std::vector;
 using std::size;
-bool Check(const std::string& str) {
-    std::regex numberPattern("^-?\\d+(\\.\\d+)?$");
-    return std::regex_match(str, numberPattern);
-}
 
 int main() {
 
-    int choice = 0;
-    string FN, MI, SN;
+    int choice;
     vector<string> firstName, middleInitial, surname;
 
-    while (choice != 10) {
+    do {
+
         cout << "========================================\n";
         cout << " STUDENT RECORD MANAGEMENT SYSTEM\n";
         cout << "========================================\n";
@@ -37,31 +33,42 @@ int main() {
         cout << "Enter your choice: ";
 
         cin >> choice;
-        cout << "\n";
+        // ingores the leftover \n so that the getline below can continue
+        cin.ignore();
 
         switch (choice) {
-            case  1:
-            
-                cout << "First Name:";
-                cin >> FN;
-                cout << "Middle Initials:";
-                cin >> MI;
-                cout << "Surname:";
-                cin >> SN;
+            case 1: {
+                string ans;
+                do {
+                    cout << "< Add Student below >\n";
+                    string FN, MI, SN;
 
-                firstName.push_back(FN);
-                middleInitial.push_back(MI);
-                surname.push_back(SN);
-                
-                for (size_t i = 0; i < surname.size(); i++)
-                {
-                    cout <<"Name: "<< firstName.at(i) << " " 
-                         << middleInitial.at(i) << " "  
-                         << surname.at(i) << "\n";
-                };
+                    cout << "First Name: ";
+                    getline(cin, FN);
+
+                    cout << "Middle Initials: ";
+                    getline(cin, MI);
+
+                    cout << "Surname: ";
+                    getline(cin, SN);
+
+                    firstName.push_back(FN);
+                    middleInitial.push_back(MI);
+                    surname.push_back(SN);
+
+                    cout << "Do you want to add another student to the list (y/n): ";
+                    getline(cin, ans);
+
+                    } while (ans == "y" || ans == "Y");
+                }
                 break;
             case  2:
-                cout << "Currently All Students List:\n";
+                cout << "Currently all students list:\n";
+
+                for (size_t i = 0; i < surname.size(); i++) {
+                    cout << (i + 1) << "). " << firstName.at(i) << " " << middleInitial.at(i) << " " << surname.at(i) << "\n";
+                };
+
                 break;
             case  3:
                 cout << "Search Student:\n";
@@ -85,14 +92,14 @@ int main() {
                 cout << "Student Statistics:\n";
                 break;
             case 10:
-                choice = false;
                 cout << "Bye!\n";
                 break;
             default:
                 cout << "Choice are invalid please choose between 1-10\n";
                 break;
         }
-    }
+    } while (choice != 10);
+    
 
     return 0;
 }
