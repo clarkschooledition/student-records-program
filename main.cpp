@@ -1,15 +1,25 @@
 #include <iostream>
-
+#include <regex>
+#include <vector>
 // Using specific imports to avoid conflicts
 using std::cout;
 using std::endl;
 using std::cin;
+using std::string;
+using std::vector;
+using std::size;
+bool Check(const std::string& str) {
+    std::regex numberPattern("^-?\\d+(\\.\\d+)?$");
+    return std::regex_match(str, numberPattern);
+}
 
 int main() {
 
-    int choice;
+    int choice = 0;
+    string FN, MI, SN;
+    vector<string> firstName, middleInitial, surname;
 
-    while (choice) {
+    while (choice != 10) {
         cout << "========================================\n";
         cout << " STUDENT RECORD MANAGEMENT SYSTEM\n";
         cout << "========================================\n";
@@ -31,7 +41,24 @@ int main() {
 
         switch (choice) {
             case  1:
-                cout << "Add student:\n";
+            
+                cout << "First Name:";
+                cin >> FN;
+                cout << "Middle Initials:";
+                cin >> MI;
+                cout << "Surname:";
+                cin >> SN;
+
+                firstName.push_back(FN);
+                middleInitial.push_back(MI);
+                surname.push_back(SN);
+                
+                for (size_t i = 0; i < surname.size(); i++)
+                {
+                    cout <<"Name: "<< firstName.at(i) << " " 
+                         << middleInitial.at(i) << " "  
+                         << surname.at(i) << "\n";
+                };
                 break;
             case  2:
                 cout << "Currently All Students List:\n";
