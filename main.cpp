@@ -12,12 +12,13 @@ void AddStudents();
 struct Node
 {
     int studentID;
+    float gradePointAverage;
     string firstName,middleInitials,surname;
     Node* next;
 
-    Node(string FN, string MI, string SN, int ID)
+    Node(string FN, string MI, string SN, int ID,float GPA)
         : firstName(FN), middleInitials(MI), surname(SN),
-        studentID(ID), next(nullptr) {}
+        studentID(ID),gradePointAverage(GPA), next(nullptr) {}
 };
 
 class LinkedList{
@@ -28,8 +29,8 @@ class LinkedList{
     head = nullptr;
  };
  
- void AppendStudent(string FN, string MI, string SN,int ID){
-    Node* newNode = new Node(FN,MI,SN,ID);
+ void AppendStudent(string FN, string MI, string SN,int ID,float GPA){
+    Node* newNode = new Node(FN,MI,SN,ID,GPA);
     
     if(head == nullptr){
     head = newNode;
@@ -50,7 +51,7 @@ class LinkedList{
     int i = 1;
     for (Node* cur = head; cur != nullptr; cur = cur->next) {
         cout << i++ << "). " << cur->firstName << " "
-             << cur->middleInitials << " " << cur->surname << "\n";
+             << cur->middleInitials << " " << cur->surname << "  GPA:" << cur->gradePointAverage << "\n";
     }
 }
 };
@@ -131,6 +132,7 @@ int main() {
 void AddStudents(){
  string ans,FN, MI, SN;
  static int ID = 1; 
+ float GPA;
     do {
         cout << "< Add Student below >\n";
 
@@ -143,7 +145,10 @@ void AddStudents(){
         cout << "Surname: ";
         getline(cin, SN);
 
-        StudentInfo.AppendStudent(FN,MI,SN,ID++);
+        cout << "GPA: ";
+        cin >> GPA;
+
+        StudentInfo.AppendStudent(FN,MI,SN,GPA,ID++);
         cout << "Do you want to add another student to the list (y/n): ";
          getline(cin, ans);          
 } 
