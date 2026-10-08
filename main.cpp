@@ -8,20 +8,30 @@ using std::endl;
 using std::string;
 // Prototype
 void AddStudents();
+void SearchStudent();
+
+/*
+TODO: note
+
+make sure to fix the feature for no.1 and no.2 and add validation
+make sure we are final about our variables that we will use like below so we dont have to overwrite again and again
+
+    float gradePointAverage;
+    string firstName, middleInitials, surname, studentID, courseName;
+*/
 
 struct Node
 {
     float gradePointAverage;
-    string firstName, middleInitials, surname, studentID;
+    string firstName, middleInitials, surname, studentID, courseName;
     Node *next;
 
-    Node(string FN, string MI, string SN, string ID, float GPA)
+    Node(string FN, string MI, string SN, string ID, float GPA, string course)
         : firstName(FN), middleInitials(MI), surname(SN),
-          studentID(ID), gradePointAverage(GPA), next(nullptr) {}
+        studentID(ID), gradePointAverage(GPA), courseName(course), next(nullptr) {}
 };
 
-class LinkedList
-{
+class LinkedList {
 private:
     Node *head;
 
@@ -31,27 +41,25 @@ public:
         head = nullptr;
     };
 
-    void AppendStudent(string FN, string MI, string SN, string ID, float GPA)
+    void AppendStudent(string FN, string MI, string SN, string ID, float GPA, string course)
     {
-        Node *newNode = new Node(FN, MI, SN, ID, GPA);
+        Node *newNode = new Node(FN, MI, SN, ID, GPA, course);
 
-        if (head == nullptr)
-        {
+        if (head == nullptr) {
             head = newNode;
             return;
         }
 
+        // Traverse until the LAST node in the list
         Node *temp = head;
-        while (head != nullptr)
+        while (temp->next != nullptr)
         {
-            Node *tmp = head;
-            head = head->next;
-            delete tmp;
+            temp = temp->next;
         }
 
         temp->next = newNode;
     }
-    void Display() const
+    void DisplayStudent() const
     {
         if (head == nullptr)
         {
@@ -61,8 +69,23 @@ public:
         int i = 1;
         for (Node *cur = head; cur != nullptr; cur = cur->next)
         {
-            cout << i++ << "). " << cur->studentID << " " << cur->firstName << " " << cur->middleInitials << " " << cur->surname << "  GPA: " << cur->gradePointAverage << "\n";
+            cout << "=====================\n";
+            cout << "Student No." << i++ << "\n";
+            cout << "ID: " << cur->studentID << "\n";
+            cout << "Name: " << cur->firstName << "\n"; 
+            cout << "Course: " << cur->courseName << "\n";
+            cout << "GPA: " << cur->gradePointAverage << "\n";
+            cout << "=====================\n\n";
+
+
         }
+    }
+
+    void LinearSearchStudent() {
+
+    }
+    void BinarySearchStudent() {
+
     }
 };
 
@@ -105,10 +128,10 @@ int main()
         }
         break;
         case 2:
-            StudentInfo.Display();
+            StudentInfo.DisplayStudent();
             break;
         case 3:
-            cout << "Search Student:\n";
+            SearchStudent();
             break;
         case 4:
             cout << "Update Student:\n";
@@ -142,7 +165,7 @@ int main()
 
 void AddStudents()
 {
-    string ans, FN, MI, SN, ID;
+    string ans, FN, MI, SN, ID, course;
     float GPA;
     do
     {
@@ -160,13 +183,47 @@ void AddStudents()
         cout << "Surname: ";
         getline(cin, SN);
 
+        cout << "Course: ";
+        getline(cin, course);
+
         cout << "GPA: ";
         cin >> GPA;
 
         cin.ignore();
 
-        StudentInfo.AppendStudent(FN, MI, SN, ID, GPA);
+        StudentInfo.AppendStudent(FN, MI, SN, ID, GPA, course);
         cout << "Do you want to add another student to the list (y/n): ";
         getline(cin, ans);
     } while (ans == "y" || ans == "Y");
+}
+
+void SearchStudent()
+{
+    int searchChoice;
+
+    do {
+
+    cout << "========================================\n";
+    cout << "Search Student\n";
+    cout << "========================================\n";
+    cout << "1. Linear Search (by Student ID)\n";
+    cout << "2. Binary Search (by Student ID)\n";
+    cout << "3. Return to Main Menu\n";
+    cout << "========================================\n";
+    cin >> searchChoice;
+
+    switch (searchChoice)
+    {
+    case 1:
+        StudentInfo.LinearSearchStudent();
+        break;
+    case 2:
+        StudentInfo.BinarySearchStudent();
+        break;
+    default:
+        cout << "Choice are invalid please choose between 1-3\n";
+        break;
+    }
+
+    } while (searchChoice != 3);
 }
