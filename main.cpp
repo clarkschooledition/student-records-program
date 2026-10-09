@@ -25,6 +25,8 @@ make sure we are final about our variables that we will use like below so we don
 
     float gradePointAverage;
     string firstName, middleInitials, surname, studentID, courseName;
+
+    validtion for student ID needed !
 */
 
 struct Student {
@@ -95,8 +97,24 @@ public:
     }
 
     void LinearSearchStudent() {
+        string searchTarget = checkString("Enter ID to search for: ");
 
+        for(Node *cur = head; cur != nullptr; cur = cur->next) {
+            if(cur->data.studentID == searchTarget) {
+
+                cout << "=====================\n";
+                cout << "Student Result:\n";
+                cout << "ID: " << cur->data.studentID << "\n";
+                cout << "Name: " << cur->data.firstName << " " << cur->data.middleInitials << " " << cur->data.surname << "\n";
+                cout << "Course: " << cur->data.courseName << "\n";
+                cout << "GPA: " << cur->data.GPA << "\n";
+                cout << "=====================\n\n";
+                return;
+            } 
+        }
+        cout << "(Info)Result Not found\n";
     }
+
     void BinarySearchStudent() {
 
     }
