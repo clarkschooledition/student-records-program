@@ -1,11 +1,16 @@
 #include <iostream>
 #include <string>
-
+#include <type_traits>
+#include <algorithm>
+#include <limits>
 // imports
 using std::cin;
 using std::cout;
 using std::endl;
 using std::string;
+using std::streamsize;
+using std::max;
+using std::numeric_limits;
 // Prototype
 void AddStudents();
 void SearchStudent();
@@ -20,44 +25,50 @@ make sure we are final about our variables that we will use like below so we don
     string firstName, middleInitials, surname, studentID, courseName;
 */
 
+struct Student {
+    string firstName, middleInitials, surname, studentID, courseName;
+    float GPA;
+};
+
 struct Node
 {
-    float gradePointAverage;
-    string firstName, middleInitials, surname, studentID, courseName;
-    Node *next;
-
-    Node(string FN, string MI, string SN, string ID, float GPA, string course)
-        : firstName(FN), middleInitials(MI), surname(SN),
-        studentID(ID), gradePointAverage(GPA), courseName(course), next(nullptr) {}
+    Student data;
+    Node* prev;
+    Node* next;
+    Node(const Student& s) : data(s),prev(nullptr), next(nullptr) {}
 };
 
 class LinkedList {
 private:
     Node *head;
-
+    Node *tail;
 public:
-    LinkedList()
+    LinkedList() : head(nullptr), tail(nullptr) {}
+
+    ~LinkedList()
     {
-        head = nullptr;
+       while (head != nullptr)
+       {
+        Node* toDelete = head;
+        head = head->next;
+        delete toDelete;
+       }
+       tail = nullptr;
     };
 
-    void AppendStudent(string FN, string MI, string SN, string ID, float GPA, string course)
+    void AppendStudent(const Student& s)
     {
-        Node *newNode = new Node(FN, MI, SN, ID, GPA, course);
+        Node *newNode = new Node(s);
 
         if (head == nullptr) {
             head = newNode;
+            tail = newNode;
             return;
         }
 
-        // Traverse until the LAST node in the list
-        Node *temp = head;
-        while (temp->next != nullptr)
-        {
-            temp = temp->next;
-        }
-
-        temp->next = newNode;
+        newNode->prev = tail;
+        tail->next = newNode;
+        tail = newNode;
     }
     void DisplayStudent() const
     {
@@ -71,10 +82,10 @@ public:
         {
             cout << "=====================\n";
             cout << "Student No." << i++ << "\n";
-            cout << "ID: " << cur->studentID << "\n";
-            cout << "Name: " << cur->firstName << "\n"; 
-            cout << "Course: " << cur->courseName << "\n";
-            cout << "GPA: " << cur->gradePointAverage << "\n";
+            cout << "ID: " << cur->data.studentID << "\n";
+            cout << "Name: " << cur->data.firstName << " " << cur->data.middleInitials << " " << cur->data.surname << "\n";
+            cout << "Course: " << cur->data.courseName << "\n";
+            cout << "GPA: " << cur->data.GPA << "\n";
             cout << "=====================\n\n";
 
 
@@ -118,7 +129,7 @@ int main()
 
         cin >> choice;
 
-        cin.ignore();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         switch (choice)
         {
@@ -165,33 +176,33 @@ int main()
 
 void AddStudents()
 {
-    string ans, FN, MI, SN, ID, course;
-    float GPA;
+    string ans;
+    Student info;
     do
     {
         cout << "< Add Student below >\n";
 
         cout << "ID: ";
-        getline(cin, ID);
+        getline(cin, info.studentID);
 
         cout << "First Name: ";
-        getline(cin, FN);
+        getline(cin, info.firstName);
 
         cout << "Middle Initials: ";
-        getline(cin, MI);
+        getline(cin, info.middleInitials);
 
         cout << "Surname: ";
-        getline(cin, SN);
+        getline(cin, info.surname);
 
         cout << "Course: ";
-        getline(cin, course);
+        getline(cin, info.courseName);
 
         cout << "GPA: ";
-        cin >> GPA;
+        cin >> info.GPA;
 
-        cin.ignore();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        StudentInfo.AppendStudent(FN, MI, SN, ID, GPA, course);
+        StudentInfo.AppendStudent(info);
         cout << "Do you want to add another student to the list (y/n): ";
         getline(cin, ans);
     } while (ans == "y" || ans == "Y");
@@ -211,7 +222,7 @@ void SearchStudent()
     cout << "3. Return to Main Menu\n";
     cout << "========================================\n";
     cin >> searchChoice;
-
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     switch (searchChoice)
     {
     case 1:
@@ -219,6 +230,9 @@ void SearchStudent()
         break;
     case 2:
         StudentInfo.BinarySearchStudent();
+        break;
+    case 3:
+        cout << "Returning to main menu\n";
         break;
     default:
         cout << "Choice are invalid please choose between 1-3\n";
