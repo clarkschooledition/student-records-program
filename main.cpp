@@ -14,7 +14,9 @@ using std::numeric_limits;
 // Prototype
 void AddStudents();
 void SearchStudent();
-
+int checkInt(const string& prompt, int minVal, int maxVal);
+float checkFloat(const string& question,float minVal , float maxVal);
+string checkString (const string& question);
 /*
 TODO: note
 
@@ -125,12 +127,8 @@ int main()
         cout << "9. Student Statistics\n";
         cout << "10. Exit\n";
         cout << "========================================\n";
-        cout << "Enter your choice: ";
 
-        cin >> choice;
-
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
+        choice = checkInt("Enter your choice: " ,1,10);
         switch (choice)
         {
         case 1:
@@ -182,25 +180,19 @@ void AddStudents()
     {
         cout << "< Add Student below >\n";
 
-        cout << "ID: ";
-        getline(cin, info.studentID);
+        info.studentID = checkString("ID: ");
 
-        cout << "First Name: ";
-        getline(cin, info.firstName);
+        info.firstName = checkString("First Name: ");
 
-        cout << "Middle Initials: ";
-        getline(cin, info.middleInitials);
+        info.middleInitials = checkString("Middle Initials: ");
 
-        cout << "Surname: ";
-        getline(cin, info.surname);
+        info.surname = checkString("Surname: ");
 
-        cout << "Course: ";
-        getline(cin, info.courseName);
+        info.courseName = checkString("Course: ");
 
-        cout << "GPA: ";
-        cin >> info.GPA;
+        info.GPA = checkFloat("GPA: ",1.0 , 6.0);
 
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
 
         StudentInfo.AppendStudent(info);
         cout << "Do you want to add another student to the list (y/n): ";
@@ -210,7 +202,7 @@ void AddStudents()
 
 void SearchStudent()
 {
-    int searchChoice;
+    int choice;
 
     do {
 
@@ -221,9 +213,9 @@ void SearchStudent()
     cout << "2. Binary Search (by Student ID)\n";
     cout << "3. Return to Main Menu\n";
     cout << "========================================\n";
-    cin >> searchChoice;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    switch (searchChoice)
+    choice = checkInt("Enter your choice: " ,1,3);
+
+    switch (choice)
     {
     case 1:
         StudentInfo.LinearSearchStudent();
@@ -239,5 +231,47 @@ void SearchStudent()
         break;
     }
 
-    } while (searchChoice != 3);
+    } while (choice != 3);
+}
+
+int checkInt(const string& question, int minVal, int maxVal){
+    int value;
+    while (true){
+        cout << question;
+        if(cin >> value && value >= minVal && value <= maxVal ){
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return value;
+        }
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Invalid input. Enter a number from " << minVal << " to " << maxVal << ".\n";
+
+    }
+}
+
+float checkFloat(const string& question,float minVal , float maxVal){
+    int value;
+    while (true){
+        cout << question;
+        if(cin >> value && value >= minVal && value <= maxVal ){
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return value;
+        }
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Invalid input. Enter a number from " << minVal << " to " << maxVal << ".\n";
+
+    }
+}
+
+string checkString (const string& question){
+    string ans;
+    while (true)
+    {
+        cout << question;
+        getline(cin, ans);
+        if (!ans.empty()) return ans;
+        cout << "This cannot be empty. \n";
+    }
+
 }
