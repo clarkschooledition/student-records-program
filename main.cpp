@@ -7,64 +7,58 @@
 using std::cin;
 using std::cout;
 using std::endl;
-using std::string;
-using std::streamsize;
 using std::max;
 using std::numeric_limits;
+using std::streamsize;
+using std::string;
 // Prototype
 void AddStudents();
 void SearchStudent();
-int checkInt(const string& prompt, int minVal, int maxVal);
-float checkFloat(const string& question,float minVal , float maxVal);
-string checkString (const string& question);
-/*
-TODO: note
-
-make sure to fix the feature for no.1 and no.2 and add validation
-make sure we are final about our variables that we will use like below so we dont have to overwrite again and again
-
-    float gradePointAverage;
-    string firstName, middleInitials, surname, studentID, courseName;
-
-    validtion for student ID needed !
-*/
-
-struct Student {
+int checkInt(const string &prompt, int minVal, int maxVal);
+float checkFloat(const string &question, float minVal, float maxVal);
+string checkString(const string &question);
+string checkUniqueID();
+struct Student
+{
     string firstName, middleInitials, surname, studentID, courseName;
     float GPA;
 };
-
+// ProtoType but needed student
+void printStudent(const Student &s);
 struct Node
 {
     Student data;
-    Node* prev;
-    Node* next;
-    Node(const Student& s) : data(s),prev(nullptr), next(nullptr) {}
+    Node *prev;
+    Node *next;
+    Node(const Student &s) : data(s), prev(nullptr), next(nullptr) {}
 };
 
-class LinkedList {
+class LinkedList
+{
 private:
     Node *head;
     Node *tail;
+
 public:
     LinkedList() : head(nullptr), tail(nullptr) {}
 
     ~LinkedList()
     {
-       while (head != nullptr)
-       {
-        Node* toDelete = head;
-        head = head->next;
-        delete toDelete;
-       }
-       tail = nullptr;
+        while (head != nullptr)
+        {
+            Node *toDelete = head;
+            head = head->next;
+            delete toDelete;
+        }
+        tail = nullptr;
     };
 
-    void AppendStudent(const Student& s)
+    void AppendStudent(const Student &s)
     {
         Node *newNode = new Node(s);
 
-        if (head == nullptr) {
+        if (head == nullptr)
+        {
             head = newNode;
             tail = newNode;
             return;
@@ -84,39 +78,67 @@ public:
         int i = 1;
         for (Node *cur = head; cur != nullptr; cur = cur->next)
         {
-            cout << "=====================\n";
-            cout << "Student No." << i++ << "\n";
-            cout << "ID: " << cur->data.studentID << "\n";
-            cout << "Name: " << cur->data.firstName << " " << cur->data.middleInitials << " " << cur->data.surname << "\n";
-            cout << "Course: " << cur->data.courseName << "\n";
-            cout << "GPA: " << cur->data.GPA << "\n";
-            cout << "=====================\n\n";
-
-
+            printStudent(cur->data);
         }
     }
 
-    void LinearSearchStudent() {
+    void LinearSearchStudent()
+    {
         string searchTarget = checkString("Enter ID to search for: ");
 
-        for(Node *cur = head; cur != nullptr; cur = cur->next) {
-            if(cur->data.studentID == searchTarget) {
-
-                cout << "=====================\n";
-                cout << "Student Result:\n";
-                cout << "ID: " << cur->data.studentID << "\n";
-                cout << "Name: " << cur->data.firstName << " " << cur->data.middleInitials << " " << cur->data.surname << "\n";
-                cout << "Course: " << cur->data.courseName << "\n";
-                cout << "GPA: " << cur->data.GPA << "\n";
-                cout << "=====================\n\n";
-                return;
-            } 
+        for (Node *cur = head; cur != nullptr; cur = cur->next)
+        {
+            if (cur->data.studentID == searchTarget)
+            {
+                printStudent(cur->data);
+            }
         }
         cout << "(Info)Result Not found\n";
     }
 
-    void BinarySearchStudent() {
+    Node *findMiddle(Node *start, Node *end)
+    {
+        if (start == nullptr)
+            return nullptr;
 
+        Node *slow = start;
+        Node *fast = start;
+        while (fast != end && fast->next != end)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;
+    }
+
+    Node *BinarySearchStudent(const string &id)
+    {
+        Node *start = head;
+        Node *end = nullptr;
+
+        while (start != end)
+        {
+            Node *mid = findMiddle(start, end);
+            if (mid->data.studentID == id)
+            {
+                return mid;
+            }
+            else if (mid->data.studentID < id)
+            {
+                start = mid->next;
+            }
+            else
+            {
+                end = mid;
+            }
+        }
+    }
+    Node *FindById(const string &id) const
+    {
+        for (Node *cur = head; cur != nullptr; cur = cur->next)
+            if (cur->data.studentID == id)
+                return cur;
+        return nullptr;
     }
 };
 
@@ -146,7 +168,7 @@ int main()
         cout << "10. Exit\n";
         cout << "========================================\n";
 
-        choice = checkInt("Enter your choice: " ,1,10);
+        choice = checkInt("Enter your choice: ", 1, 10);
         switch (choice)
         {
         case 1:
@@ -198,7 +220,7 @@ void AddStudents()
     {
         cout << "< Add Student below >\n";
 
-        info.studentID = checkString("ID: ");
+        info.studentID = checkUniqueID();
 
         info.firstName = checkString("First Name: ");
 
@@ -208,9 +230,7 @@ void AddStudents()
 
         info.courseName = checkString("Course: ");
 
-        info.GPA = checkFloat("GPA: ",1.0 , 6.0);
-
-
+        info.GPA = checkFloat("GPA: ", 1.0, 6.0);
 
         StudentInfo.AppendStudent(info);
         cout << "Do you want to add another student to the list (y/n): ";
@@ -222,74 +242,98 @@ void SearchStudent()
 {
     int choice;
 
-    do {
-
-    cout << "========================================\n";
-    cout << "Search Student\n";
-    cout << "========================================\n";
-    cout << "1. Linear Search (by Student ID)\n";
-    cout << "2. Binary Search (by Student ID)\n";
-    cout << "3. Return to Main Menu\n";
-    cout << "========================================\n";
-    choice = checkInt("Enter your choice: " ,1,3);
-
-    switch (choice)
+    do
     {
-    case 1:
-        StudentInfo.LinearSearchStudent();
-        break;
-    case 2:
-        StudentInfo.BinarySearchStudent();
-        break;
-    case 3:
-        cout << "Returning to main menu\n";
-        break;
-    default:
-        cout << "Choice are invalid please choose between 1-3\n";
-        break;
-    }
+
+        cout << "========================================\n";
+        cout << "Search Student\n";
+        cout << "========================================\n";
+        cout << "1. Linear Search (by Student ID)\n";
+        cout << "2. Binary Search (by Student ID)\n";
+        cout << "3. Return to Main Menu\n";
+        cout << "========================================\n";
+        choice = checkInt("Enter your choice: ", 1, 3);
+
+        switch (choice)
+        {
+        case 1:
+            StudentInfo.LinearSearchStudent();
+            break;
+        case 2:
+            // StudentInfo.BinarySearchStudent();
+            break;
+        case 3:
+            cout << "Returning to main menu\n";
+            break;
+        default:
+            cout << "Choice are invalid please choose between 1-3\n";
+            break;
+        }
 
     } while (choice != 3);
 }
 
-int checkInt(const string& question, int minVal, int maxVal){
+int checkInt(const string &question, int minVal, int maxVal)
+{
     int value;
-    while (true){
+    while (true)
+    {
         cout << question;
-        if(cin >> value && value >= minVal && value <= maxVal ){
+        if (cin >> value && value >= minVal && value <= maxVal)
+        {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return value;
         }
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << "Invalid input. Enter a number from " << minVal << " to " << maxVal << ".\n";
-
     }
 }
 
-float checkFloat(const string& question,float minVal , float maxVal){
+float checkFloat(const string &question, float minVal, float maxVal)
+{
     int value;
-    while (true){
+    while (true)
+    {
         cout << question;
-        if(cin >> value && value >= minVal && value <= maxVal ){
+        if (cin >> value && value >= minVal && value <= maxVal)
+        {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return value;
         }
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << "Invalid input. Enter a number from " << minVal << " to " << maxVal << ".\n";
-
     }
 }
 
-string checkString (const string& question){
+string checkString(const string &question)
+{
     string ans;
     while (true)
     {
         cout << question;
         getline(cin, ans);
-        if (!ans.empty()) return ans;
+        if (!ans.empty())
+            return ans;
         cout << "This cannot be empty. \n";
     }
+}
+void printStudent(const Student &s)
+{
+    cout << "ID: " << s.studentID << "\n";
+    cout << "Name: " << s.firstName << " " << s.middleInitials << " " << s.surname << "\n";
+    cout << "Course: " << s.courseName << "\n";
+    cout << "GPA: " << s.GPA << "\n";
+};
 
+string checkUniqueID()
+{
+    while (true)
+    {
+        string id = checkString("ID: ");
+        if (StudentInfo.FindById(id) == nullptr)
+            return id; // not found = ID is free
+        cout << "That ID already exists. Enter a different one.\n";
+    }
 }
