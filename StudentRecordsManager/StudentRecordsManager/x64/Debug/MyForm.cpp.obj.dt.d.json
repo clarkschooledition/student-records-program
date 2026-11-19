@@ -1,0 +1,12 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\aitsu\\source\\repos\\studentrecordsmanager\\studentrecordsmanager\\myform.cpp",
+        "ProvidedModule": "",
+        "Includes": [
+            "c:\\users\\aitsu\\source\\repos\\studentrecordsmanager\\studentrecordsmanager\\myform.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

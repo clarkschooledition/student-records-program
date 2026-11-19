@@ -1,0 +1,3 @@
+C:\Users\aitsu\source\repos\StudentRecordsManager\StudentRecordsManager\x64\Debug\StudentRecordsManager.vcxproj.AssemblyReference.cache
+C:\Users\aitsu\source\repos\StudentRecordsManager\StudentRecordsManager\x64\Debug\StudentRecordsManager.MainWindow.resources
+C:\Users\aitsu\source\repos\StudentRecordsManager\StudentRecordsManager\x64\Debug\StudentRecordsManager.vcxproj.GenerateResource.cache
