@@ -2,6 +2,9 @@
 
 #include "Common.h"
 #include "StudentRecords.h"
+#include "Sorting.h"
+#include "QueueOperations.h"
+#include "StudentStatistics.h"
 #include <msclr/marshal_cppstd.h>
 #include <vector>
 
@@ -43,23 +46,28 @@ namespace StudentRecordsManager {
 	private: System::Windows::Forms::GroupBox^ ui_studentsTable;
 	private: System::Windows::Forms::DataGridView^ dt_studentTable;
 
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ col_studentId;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ col_firstName;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ col_middleInitial;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ col_lastName;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ col_Course;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ col_GPA;
+
+
+
+
+
+
 	private: System::Windows::Forms::GroupBox^ ui_controls;
 	private: System::Windows::Forms::GroupBox^ ui_recentDeletions;
 	private: System::Windows::Forms::GroupBox^ ui_studentQueue;
-	private: System::Windows::Forms::TextBox^ textBox6;
+	private: System::Windows::Forms::TextBox^ txt_GPA;
 
-	private: System::Windows::Forms::TextBox^ textBox4;
-	private: System::Windows::Forms::TextBox^ textBox3;
-	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ txt_id;
+
+
+	private: System::Windows::Forms::TextBox^ txt_lastName;
+
+	private: System::Windows::Forms::TextBox^ txt_middleName;
+
 	private: System::Windows::Forms::TextBox^ textBoxSearchLastName;
 	private: System::Windows::Forms::Label^ lbl_searchLastName;
-	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::TextBox^ txt_firstName;
+
 	private: System::Windows::Forms::Button^ btn_changeFunction;
 	private: System::Windows::Forms::Button^ btn_Submit;
 	private: System::Windows::Forms::Button^ btn_searchLinear;
@@ -130,6 +138,18 @@ namespace StudentRecordsManager {
 		int functionMode;
 		int searchAlgorithm;
 		StudentRecordsCore::DataStore* records;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^ col_studentId;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^ col_firstName;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^ col_middleInitial;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^ col_lastName;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^ col_Course;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^ col_GPA;
+
+
+
+
+
+
 
 		/// <summary>
 		/// Required designer variable.
@@ -153,6 +173,10 @@ namespace StudentRecordsManager {
 			this->col_GPA = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->ui_controls = (gcnew System::Windows::Forms::GroupBox());
 			this->btn_addQueue = (gcnew System::Windows::Forms::Button());
+			this->btn_searchBinary = (gcnew System::Windows::Forms::Button());
+			this->btn_searchLinear = (gcnew System::Windows::Forms::Button());
+			this->textBoxSearchLastName = (gcnew System::Windows::Forms::TextBox());
+			this->lbl_searchLastName = (gcnew System::Windows::Forms::Label());
 			this->cmb_Course = (gcnew System::Windows::Forms::ComboBox());
 			this->lbl_GPA = (gcnew System::Windows::Forms::Label());
 			this->lbl_course = (gcnew System::Windows::Forms::Label());
@@ -162,15 +186,11 @@ namespace StudentRecordsManager {
 			this->lbl_firstName = (gcnew System::Windows::Forms::Label());
 			this->btn_changeFunction = (gcnew System::Windows::Forms::Button());
 			this->btn_Submit = (gcnew System::Windows::Forms::Button());
-			this->btn_searchLinear = (gcnew System::Windows::Forms::Button());
-			this->btn_searchBinary = (gcnew System::Windows::Forms::Button());
-			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->textBoxSearchLastName = (gcnew System::Windows::Forms::TextBox());
-			this->lbl_searchLastName = (gcnew System::Windows::Forms::Label());
+			this->txt_GPA = (gcnew System::Windows::Forms::TextBox());
+			this->txt_id = (gcnew System::Windows::Forms::TextBox());
+			this->txt_lastName = (gcnew System::Windows::Forms::TextBox());
+			this->txt_middleName = (gcnew System::Windows::Forms::TextBox());
+			this->txt_firstName = (gcnew System::Windows::Forms::TextBox());
 			this->ui_recentDeletions = (gcnew System::Windows::Forms::GroupBox());
 			this->dt_recentDeletions = (gcnew System::Windows::Forms::DataGridView());
 			this->rcol_ID = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
@@ -202,7 +222,7 @@ namespace StudentRecordsManager {
 			this->ui_studentsTable->TabIndex = 0;
 			this->ui_studentsTable->TabStop = false;
 			this->ui_studentsTable->Text = L"Students ";
- 			// 
+			// 
 			// dt_studentTable
 			// 
 			this->dt_studentTable->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
@@ -223,7 +243,7 @@ namespace StudentRecordsManager {
 			this->col_studentId->HeaderText = L"ID";
 			this->col_studentId->Name = L"col_studentId";
 			this->col_studentId->ReadOnly = true;
-			this->col_studentId->Width = 150;
+			this->col_studentId->Width = 120;
 			// 
 			// col_firstName
 			// 
@@ -251,14 +271,14 @@ namespace StudentRecordsManager {
 			this->col_Course->HeaderText = L"Course";
 			this->col_Course->Name = L"col_Course";
 			this->col_Course->ReadOnly = true;
-			this->col_Course->Width = 150;
+			this->col_Course->Width = 250;
 			// 
 			// col_GPA
 			// 
 			this->col_GPA->HeaderText = L"GPA";
 			this->col_GPA->Name = L"col_GPA";
 			this->col_GPA->ReadOnly = true;
-			this->col_GPA->Width = 150;
+			this->col_GPA->Width = 60;
 			// 
 			// ui_controls
 			// 
@@ -279,11 +299,11 @@ namespace StudentRecordsManager {
 			this->ui_controls->Controls->Add(this->lbl_firstName);
 			this->ui_controls->Controls->Add(this->btn_changeFunction);
 			this->ui_controls->Controls->Add(this->btn_Submit);
-			this->ui_controls->Controls->Add(this->textBox6);
-			this->ui_controls->Controls->Add(this->textBox4);
-			this->ui_controls->Controls->Add(this->textBox3);
-			this->ui_controls->Controls->Add(this->textBox2);
-			this->ui_controls->Controls->Add(this->textBox1);
+			this->ui_controls->Controls->Add(this->txt_GPA);
+			this->ui_controls->Controls->Add(this->txt_id);
+			this->ui_controls->Controls->Add(this->txt_lastName);
+			this->ui_controls->Controls->Add(this->txt_middleName);
+			this->ui_controls->Controls->Add(this->txt_firstName);
 			this->ui_controls->Location = System::Drawing::Point(964, 12);
 			this->ui_controls->Name = L"ui_controls";
 			this->ui_controls->Size = System::Drawing::Size(625, 281);
@@ -301,20 +321,62 @@ namespace StudentRecordsManager {
 			this->btn_addQueue->Text = L"Add to Queue";
 			this->btn_addQueue->UseVisualStyleBackColor = true;
 			// 
+			// btn_searchBinary
+			// 
+			this->btn_searchBinary->Location = System::Drawing::Point(30, 217);
+			this->btn_searchBinary->Name = L"btn_searchBinary";
+			this->btn_searchBinary->Size = System::Drawing::Size(130, 23);
+			this->btn_searchBinary->TabIndex = 19;
+			this->btn_searchBinary->Text = L"Binary Search";
+			this->btn_searchBinary->UseVisualStyleBackColor = true;
+			this->btn_searchBinary->Click += gcnew System::EventHandler(this, &MainWindow::btn_searchBinary_Click);
+			// 
+			// btn_searchLinear
+			// 
+			this->btn_searchLinear->Location = System::Drawing::Point(30, 190);
+			this->btn_searchLinear->Name = L"btn_searchLinear";
+			this->btn_searchLinear->Size = System::Drawing::Size(130, 23);
+			this->btn_searchLinear->TabIndex = 18;
+			this->btn_searchLinear->Text = L"Linear Search";
+			this->btn_searchLinear->UseVisualStyleBackColor = true;
+			this->btn_searchLinear->Click += gcnew System::EventHandler(this, &MainWindow::btn_searchLinear_Click);
+			// 
+			// textBoxSearchLastName
+			// 
+			this->textBoxSearchLastName->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
+			this->textBoxSearchLastName->Location = System::Drawing::Point(219, 133);
+			this->textBoxSearchLastName->Name = L"textBoxSearchLastName";
+			this->textBoxSearchLastName->Size = System::Drawing::Size(133, 20);
+			this->textBoxSearchLastName->TabIndex = 17;
+			// 
+			// lbl_searchLastName
+			// 
+			this->lbl_searchLastName->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
+			this->lbl_searchLastName->AutoSize = true;
+			this->lbl_searchLastName->Location = System::Drawing::Point(216, 111);
+			this->lbl_searchLastName->Name = L"lbl_searchLastName";
+			this->lbl_searchLastName->Size = System::Drawing::Size(58, 13);
+			this->lbl_searchLastName->TabIndex = 16;
+			this->lbl_searchLastName->Text = L"Last Name";
+			// 
 			// cmb_Course
 			// 
 			this->cmb_Course->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
 			this->cmb_Course->FormattingEnabled = true;
+			this->cmb_Course->Items->AddRange(gcnew cli::array< System::Object^  >(5) {
+				L"Bachelor of Science in Computer Science", L"Bachelor of Science in Information Technology",
+					L"Bachelor of Science in Computer Engineering", L"Bachelor of Science in Game Development", L"Bachelor of Science in Systems Development"
+			});
 			this->cmb_Course->Location = System::Drawing::Point(219, 132);
 			this->cmb_Course->Name = L"cmb_Course";
-			this->cmb_Course->Size = System::Drawing::Size(121, 21);
+			this->cmb_Course->Size = System::Drawing::Size(192, 21);
 			this->cmb_Course->TabIndex = 14;
 			// 
 			// lbl_GPA
 			// 
 			this->lbl_GPA->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
 			this->lbl_GPA->AutoSize = true;
-			this->lbl_GPA->Location = System::Drawing::Point(382, 110);
+			this->lbl_GPA->Location = System::Drawing::Point(445, 111);
 			this->lbl_GPA->Name = L"lbl_GPA";
 			this->lbl_GPA->Size = System::Drawing::Size(29, 13);
 			this->lbl_GPA->TabIndex = 13;
@@ -369,7 +431,6 @@ namespace StudentRecordsManager {
 			this->lbl_firstName->Size = System::Drawing::Size(57, 13);
 			this->lbl_firstName->TabIndex = 8;
 			this->lbl_firstName->Text = L"First Name";
-	
 			// 
 			// btn_changeFunction
 			// 
@@ -393,86 +454,50 @@ namespace StudentRecordsManager {
 			this->btn_Submit->UseVisualStyleBackColor = true;
 			this->btn_Submit->Click += gcnew System::EventHandler(this, &MainWindow::btn_Submit_Click);
 			// 
-			// btn_searchLinear
+			// txt_GPA
 			// 
-			this->btn_searchLinear->Location = System::Drawing::Point(30, 190);
-			this->btn_searchLinear->Name = L"btn_searchLinear";
-			this->btn_searchLinear->Size = System::Drawing::Size(130, 23);
-			this->btn_searchLinear->TabIndex = 18;
-			this->btn_searchLinear->Text = L"Linear Search";
-			this->btn_searchLinear->UseVisualStyleBackColor = true;
-			this->btn_searchLinear->Click += gcnew System::EventHandler(this, &MainWindow::btn_searchLinear_Click);
+			this->txt_GPA->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
+			this->txt_GPA->Location = System::Drawing::Point(448, 132);
+			this->txt_GPA->Margin = System::Windows::Forms::Padding(5);
+			this->txt_GPA->Name = L"txt_GPA";
+			this->txt_GPA->Size = System::Drawing::Size(77, 20);
+			this->txt_GPA->TabIndex = 5;
 			// 
-			// btn_searchBinary
+			// txt_id
 			// 
-			this->btn_searchBinary->Location = System::Drawing::Point(30, 217);
-			this->btn_searchBinary->Name = L"btn_searchBinary";
-			this->btn_searchBinary->Size = System::Drawing::Size(130, 23);
-			this->btn_searchBinary->TabIndex = 19;
-			this->btn_searchBinary->Text = L"Binary Search";
-			this->btn_searchBinary->UseVisualStyleBackColor = true;
-			this->btn_searchBinary->Click += gcnew System::EventHandler(this, &MainWindow::btn_searchBinary_Click);
+			this->txt_id->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
+			this->txt_id->Location = System::Drawing::Point(30, 132);
+			this->txt_id->Margin = System::Windows::Forms::Padding(5);
+			this->txt_id->Name = L"txt_id";
+			this->txt_id->Size = System::Drawing::Size(159, 20);
+			this->txt_id->TabIndex = 3;
 			// 
-			// textBox6
+			// txt_lastName
 			// 
-			this->textBox6->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
-			this->textBox6->Location = System::Drawing::Point(382, 131);
-			this->textBox6->Margin = System::Windows::Forms::Padding(5);
-			this->textBox6->Name = L"textBox6";
-			this->textBox6->Size = System::Drawing::Size(143, 20);
-			this->textBox6->TabIndex = 5;
+			this->txt_lastName->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
+			this->txt_lastName->Location = System::Drawing::Point(382, 72);
+			this->txt_lastName->Margin = System::Windows::Forms::Padding(5);
+			this->txt_lastName->Name = L"txt_lastName";
+			this->txt_lastName->Size = System::Drawing::Size(143, 20);
+			this->txt_lastName->TabIndex = 2;
 			// 
-			// textBox4
+			// txt_middleName
 			// 
-			this->textBox4->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
-			this->textBox4->Location = System::Drawing::Point(30, 132);
-			this->textBox4->Margin = System::Windows::Forms::Padding(5);
-			this->textBox4->Name = L"textBox4";
-			this->textBox4->Size = System::Drawing::Size(159, 20);
-			this->textBox4->TabIndex = 3;
+			this->txt_middleName->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
+			this->txt_middleName->Location = System::Drawing::Point(216, 72);
+			this->txt_middleName->Margin = System::Windows::Forms::Padding(5);
+			this->txt_middleName->Name = L"txt_middleName";
+			this->txt_middleName->Size = System::Drawing::Size(133, 20);
+			this->txt_middleName->TabIndex = 1;
 			// 
-			// textBox3
+			// txt_firstName
 			// 
-			this->textBox3->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
-			this->textBox3->Location = System::Drawing::Point(382, 72);
-			this->textBox3->Margin = System::Windows::Forms::Padding(5);
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(143, 20);
-			this->textBox3->TabIndex = 2;
-			// 
-			// textBox2
-			// 
-			this->textBox2->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
-			this->textBox2->Location = System::Drawing::Point(216, 72);
-			this->textBox2->Margin = System::Windows::Forms::Padding(5);
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(133, 20);
-			this->textBox2->TabIndex = 1;
-			// 
-			// textBox1
-			// 
-			this->textBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
-			this->textBox1->Location = System::Drawing::Point(30, 72);
-			this->textBox1->Margin = System::Windows::Forms::Padding(5);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(159, 20);
-			this->textBox1->TabIndex = 0;
-			// 
-			// lbl_searchLastName
-			// 
-			this->lbl_searchLastName->AutoSize = true;
-			this->lbl_searchLastName->Location = System::Drawing::Point(216, 111);
-			this->lbl_searchLastName->Name = L"lbl_searchLastName";
-			this->lbl_searchLastName->Size = System::Drawing::Size(58, 13);
-			this->lbl_searchLastName->TabIndex = 16;
-			this->lbl_searchLastName->Text = L"Last Name";
-			// 
-			// textBoxSearchLastName
-			// 
-			this->textBoxSearchLastName->Location = System::Drawing::Point(219, 132);
-			this->textBoxSearchLastName->Name = L"textBoxSearchLastName";
-			this->textBoxSearchLastName->Size = System::Drawing::Size(143, 20);
-			this->textBoxSearchLastName->TabIndex = 17;
+			this->txt_firstName->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
+			this->txt_firstName->Location = System::Drawing::Point(30, 72);
+			this->txt_firstName->Margin = System::Windows::Forms::Padding(5);
+			this->txt_firstName->Name = L"txt_firstName";
+			this->txt_firstName->Size = System::Drawing::Size(159, 20);
+			this->txt_firstName->TabIndex = 0;
 			// 
 			// ui_recentDeletions
 			// 
@@ -635,10 +660,23 @@ namespace StudentRecordsManager {
 			}
 		}
 
+		void refreshRecentlyDeletedTable()
+		{
+			this->dt_recentDeletions->Rows->Clear();
+			std::vector<StudentRecordsCore::Student> deletedStudents = StudentRecordsCore::getDeletedStudents(*records);
+			for (std::size_t i = 0; i < deletedStudents.size(); ++i)
+			{
+				array<Object^>^ row = gcnew array<Object^>(2);
+				row[0] = deletedStudents[i].id;
+				row[1] = msclr::interop::marshal_as<String^>(deletedStudents[i].lastName);
+				this->dt_recentDeletions->Rows->Add(row);
+			}
+		}
+
 		bool readStudentFields(int id, StudentRecordsCore::Student& student)
 		{
-			if (this->textBox1->Text->Trim()->Length == 0 ||
-				this->textBox3->Text->Trim()->Length == 0 ||
+			if (this->txt_firstName->Text->Trim()->Length == 0 ||
+				this->txt_lastName->Text->Trim()->Length == 0 ||
 				this->cmb_Course->Text->Trim()->Length == 0)
 			{
 				MessageBox::Show(L"Enter the student's first name, last name, and course.", L"Missing Information", MessageBoxButtons::OK, MessageBoxIcon::Warning);
@@ -646,16 +684,16 @@ namespace StudentRecordsManager {
 			}
 
 			double gpa;
-			if (!Double::TryParse(this->textBox6->Text->Trim(), gpa) || gpa < 0.0 || gpa > 5.0)
+			if (!Double::TryParse(this->txt_GPA->Text->Trim(), gpa) || gpa < 0.0 || gpa > 5.0)
 			{
 				MessageBox::Show(L"Enter a GPA from 0 to 5.", L"Invalid GPA", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 				return false;
 			}
 
 			student.id = id;
-			student.firstName = msclr::interop::marshal_as<std::string>(this->textBox1->Text->Trim());
-			student.middleInitial = msclr::interop::marshal_as<std::string>(this->textBox2->Text->Trim());
-			student.lastName = msclr::interop::marshal_as<std::string>(this->textBox3->Text->Trim());
+			student.firstName = msclr::interop::marshal_as<std::string>(this->txt_firstName->Text->Trim());
+			student.middleInitial = msclr::interop::marshal_as<std::string>(this->txt_middleName->Text->Trim());
+			student.lastName = msclr::interop::marshal_as<std::string>(this->txt_lastName->Text->Trim());
 			student.course = msclr::interop::marshal_as<std::string>(this->cmb_Course->Text->Trim());
 			student.gpa = gpa;
 			return true;
@@ -666,7 +704,7 @@ namespace StudentRecordsManager {
 			if (functionMode == 0 || functionMode == 1)
 			{
 				int id;
-				if (!Int32::TryParse(this->textBox4->Text->Trim(), id) || id <= 0)
+				if (!Int32::TryParse(this->txt_id->Text->Trim(), id) || id <= 0)
 				{
 					MessageBox::Show(L"Enter a positive numeric student ID.", L"Invalid ID", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 					return;
@@ -696,9 +734,30 @@ namespace StudentRecordsManager {
 				return;
 			}
 
+			if (functionMode == 2)
+			{
+				int id;
+				if (!Int32::TryParse(this->txt_id->Text->Trim(), id) || id <= 0)
+				{
+					MessageBox::Show(L"Enter a positive numeric student ID.", L"Invalid ID", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+					return;
+				}
+
+				if (!StudentRecordsCore::deleteStudent(*records, id))
+				{
+					MessageBox::Show(L"No student was found with that ID.", L"Student Not Found", MessageBoxButtons::OK, MessageBoxIcon::Information);
+					return;
+				}
+
+				refreshStudentTable();
+				refreshRecentlyDeletedTable();
+				MessageBox::Show(L"Student deleted and added to Recent Deletions.", L"Student Deleted", MessageBoxButtons::OK, MessageBoxIcon::Information);
+				return;
+			}
+
 			if (functionMode == 3)
 			{
-				String^ idText = this->textBox4->Text->Trim();
+				String^ idText = this->txt_id->Text->Trim();
 				String^ lastNameText = this->textBoxSearchLastName->Text->Trim();
 				bool hasId = idText->Length > 0;
 				bool hasLastName = lastNameText->Length > 0;
@@ -757,10 +816,6 @@ namespace StudentRecordsManager {
 					}
 				}
 			}
-			else if (functionMode == 2)
-			{
-				MessageBox::Show(L"Delete is not implemented yet.", L"Not Available", MessageBoxButtons::OK, MessageBoxIcon::Information);
-			}
 		}
 
 	private: System::Void btn_Submit_Click(System::Object^ sender, System::EventArgs^ e)
@@ -786,16 +841,19 @@ namespace StudentRecordsManager {
 			bool showStudentFields = (functionMode == 0 || functionMode == 1);
 			bool isSearchMode = (functionMode == 3);
 
+			//add and edit
 			this->lbl_firstName->Visible = showStudentFields;
-			this->textBox1->Visible = showStudentFields;
+			this->txt_firstName->Visible = showStudentFields;
 			this->lbl_middleInitial->Visible = showStudentFields;
-			this->textBox2->Visible = showStudentFields;
+			this->txt_middleName->Visible = showStudentFields;
 			this->lbl_lastName->Visible = showStudentFields;
-			this->textBox3->Visible = showStudentFields;
+			this->txt_lastName->Visible = showStudentFields;
 			this->lbl_course->Visible = showStudentFields;
 			this->cmb_Course->Visible = showStudentFields;
 			this->lbl_GPA->Visible = showStudentFields;
-			this->textBox6->Visible = showStudentFields;
+			this->txt_GPA->Visible = showStudentFields;
+
+			//search
 			this->lbl_searchLastName->Visible = isSearchMode;
 			this->textBoxSearchLastName->Visible = isSearchMode;
 			this->btn_searchLinear->Visible = isSearchMode;
@@ -838,7 +896,7 @@ namespace StudentRecordsManager {
 		functionMode = (functionMode + 1) % 4;
 		if (functionMode == 3)
 		{
-			this->textBox4->Clear();
+			this->txt_id->Clear();
 			this->textBoxSearchLastName->Clear();
 		}
 		updateControlsForMode();

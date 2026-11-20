@@ -32,5 +32,8 @@
     <ClInclude Include="StackOperations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Sorting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -137,6 +137,9 @@
     <ClInclude Include="MainWindow.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="QueueOperations.h" />
+    <ClInclude Include="Sorting.h" />
+    <ClInclude Include="StudentStatistics.h" />
     <ClInclude Include="StackOperations.h" />
     <ClInclude Include="StudentRecords.h" />
   </ItemGroup>
